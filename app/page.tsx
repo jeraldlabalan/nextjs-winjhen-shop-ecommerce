@@ -18,7 +18,7 @@ export default function HomePage() {
             </div>
             <div className="flex space-x-4">
               <Link href="/auth/login">
-                <Button variant="outline">Sign In</Button>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">Sign In</Button>
               </Link>
               <Link href="/auth/signup">
                 <Button>Get Started</Button>
@@ -45,7 +45,7 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/auth/login">
-                <Button variant="outline" size="lg" className="text-lg px-8 py-3">
+                <Button size="lg" className="text-lg px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white">
                   Access Account
                 </Button>
               </Link>
