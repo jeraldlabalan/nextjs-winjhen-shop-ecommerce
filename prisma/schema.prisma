@@ -60,6 +60,7 @@ model User {
   products          Product[] // For employees who create products
   resellerOrders    ResellerOrder[]
   resellerPayments  ResellerPayment[]
+  adminConfirmations ResellerOrder[] @relation("AdminConfirmation")
 
   @@map("users")
 }

@@ -54,7 +54,7 @@ export default function LoginPage() {
           }
         }
       }
-    } catch (error) {
+    } catch (_err) {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -164,7 +164,7 @@ export default function LoginPage() {
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href="/auth/signup"
                 className="font-medium text-blue-600 hover:text-blue-500"
