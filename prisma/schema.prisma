@@ -1,0 +1,208 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EMPLOYEE
+  RETAIL_CUSTOMER
+  RESELLER_CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIAL
+  OVERDUE
+  CANCELLED
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  password          String
+  firstName         String
+  lastName          String
+  phone             String?
+  address           String?
+  city              String?
+  state             String?
+  zipCode           String?
+  country           String?
+  role              UserRole  @default(RETAIL_CUSTOMER)
+  isActive          Boolean   @default(true)
+  emailVerified     Boolean   @default(false)
+  emailVerificationToken String?
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  orders            Order[]
+  products          Product[] // For employees who create products
+  resellerOrders    ResellerOrder[]
+  resellerPayments  ResellerPayment[]
+
+  @@map("users")
+}
+
+model Product {
+  id                String    @id @default(cuid())
+  name              String
+  description       String?
+  sku               String    @unique
+  category          String?
+  brand             String?
+  retailPrice       Decimal   @db.Decimal(10, 2)
+  resellerPrice     Decimal   @db.Decimal(10, 2)
+  costPrice         Decimal   @db.Decimal(10, 2)
+  stockQuantity     Int       @default(0)
+  minStockLevel     Int       @default(0)
+  isActive          Boolean   @default(true)
+  images            String[]  // Array of image URLs
+  weight            Decimal?  @db.Decimal(8, 2)
+  dimensions        String?   // "LxWxH" format
+  tags              String[]
+  createdBy         String    // User ID who created the product
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  creator           User      @relation(fields: [createdBy], references: [id])
+  orderItems        OrderItem[]
+  resellerOrderItems ResellerOrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  customerId        String
+  status            OrderStatus @default(PENDING)
+  paymentStatus     PaymentStatus @default(PENDING)
+  subtotal          Decimal     @db.Decimal(10, 2)
+  tax               Decimal     @db.Decimal(10, 2)
+  shipping          Decimal     @db.Decimal(10, 2)
+  total             Decimal     @db.Decimal(10, 2)
+  notes             String?
+  shippingAddress   String
+  shippingCity      String
+  shippingState     String
+  shippingZipCode   String
+  shippingCountry   String
+  trackingNumber    String?
+  estimatedDelivery DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  // Relations
+  customer          User        @relation(fields: [customerId], references: [id])
+  items             OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                String    @id @default(cuid())
+  orderId           String
+  productId         String
+  quantity          Int
+  unitPrice         Decimal   @db.Decimal(10, 2)
+  totalPrice        Decimal   @db.Decimal(10, 2)
+  createdAt         DateTime  @default(now())
+
+  // Relations
+  order             Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product           Product   @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model ResellerOrder {
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  resellerId        String
+  status            OrderStatus @default(PENDING)
+  paymentStatus     PaymentStatus @default(PENDING)
+  subtotal          Decimal     @db.Decimal(10, 2)
+  tax               Decimal     @db.Decimal(10, 2)
+  shipping          Decimal     @db.Decimal(10, 2)
+  total             Decimal     @db.Decimal(10, 2)
+  notes             String?
+  adminNotes        String?     // Admin notes during confirmation
+  isConfirmed       Boolean     @default(false)
+  confirmedBy       String?     // Admin ID who confirmed
+  confirmedAt       DateTime?
+  shippingAddress   String
+  shippingCity      String
+  shippingState     String
+  shippingZipCode   String
+  shippingCountry   String
+  trackingNumber    String?
+  estimatedDelivery DateTime?
+  paymentDueDate    DateTime?   // When reseller needs to pay
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  // Relations
+  reseller          User        @relation(fields: [resellerId], references: [id])
+  admin             User?       @relation("AdminConfirmation", fields: [confirmedBy], references: [id])
+  items             ResellerOrderItem[]
+  payments          ResellerPayment[]
+
+  @@map("reseller_orders")
+}
+
+model ResellerOrderItem {
+  id                String    @id @default(cuid())
+  resellerOrderId   String
+  productId         String
+  quantity          Int
+  unitPrice         Decimal   @db.Decimal(10, 2) // Can be modified by admin
+  totalPrice        Decimal   @db.Decimal(10, 2)
+  originalPrice     Decimal   @db.Decimal(10, 2) // Original price before modification
+  createdAt         DateTime  @default(now())
+
+  // Relations
+  resellerOrder     ResellerOrder @relation(fields: [resellerOrderId], references: [id], onDelete: Cascade)
+  product           Product       @relation(fields: [productId], references: [id])
+
+  @@map("reseller_order_items")
+}
+
+model ResellerPayment {
+  id                String    @id @default(cuid())
+  resellerOrderId   String
+  resellerId        String
+  amount            Decimal   @db.Decimal(10, 2)
+  paymentDate       DateTime
+  paymentMethod     String?
+  reference         String?   // Payment reference number
+  notes             String?
+  createdAt         DateTime  @default(now())
+
+  // Relations
+  resellerOrder     ResellerOrder @relation(fields: [resellerOrderId], references: [id])
+  reseller          User           @relation(fields: [resellerId], references: [id])
+
+  @@map("reseller_payments")
+}
