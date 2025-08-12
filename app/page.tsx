@@ -21,7 +21,7 @@ export default function HomePage() {
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">Sign In</Button>
               </Link>
               <Link href="/auth/signup">
-                <Button>Get Started</Button>
+                <Button className="">Get Started</Button>
               </Link>
             </div>
           </div>

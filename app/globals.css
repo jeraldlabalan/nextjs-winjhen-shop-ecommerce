@@ -10,25 +10,12 @@
   --color-rich-brown: #5D4037;
   --color-warm-beige: #D7CCC8;
   --color-off-white: #FFF8F6;
+  --border-soft-black: rgba(0, 0, 0, 0.2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  
-  /* Connect your custom colors to Tailwind */
-  --color-primary-pink: var(--color-primary-pink);
-  --color-soft-pink: var(--color-soft-pink);
-  --color-rich-brown: var(--color-rich-brown);
-  --color-warm-beige: var(--color-warm-beige);
-  --color-off-white: var(--color-off-white);
-  
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
 body {
-  background: var(--background);
+  background: var(--color-off-white);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
