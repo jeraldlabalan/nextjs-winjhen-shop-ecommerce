@@ -13,6 +13,7 @@
   --border-soft-black: rgba(0, 0, 0, 0.2);
 }
 
+
 body {
   background: var(--color-off-white);
   color: var(--foreground);
