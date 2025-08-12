@@ -9,8 +9,8 @@ export default function HomePage() {
         <header className="py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <div className="h-10 w-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="h-10 w-10 bg-[var(--color-primary-pink)] rounded-lg flex items-center justify-center mr-3">
+                <svg className="h-6 w-6 bg-[var(--color-primary-pink)] text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
@@ -18,10 +18,10 @@ export default function HomePage() {
             </div>
             <div className="flex space-x-4">
               <Link href="/auth/login">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">Sign In</Button>
+                <Button className="bg-[var(--color-primary-pink)] hover:bg-[var(--color-primary-pink-dark)] text-white">Sign In</Button>
               </Link>
               <Link href="/auth/signup">
-                <Button className="">Get Started</Button>
+                <Button className="border border-[var(--border-soft-black)] border-t-0 border-l-0 shadow-[var(--shadow-soft-black)]">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -32,7 +32,7 @@ export default function HomePage() {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
               Professional E-commerce
-              <span className="text-blue-600"> Platform</span>
+              <span className="text-[var(--color-primary-pink)]"> Platform</span>
             </h2>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
               A comprehensive solution for retail and wholesale business with role-based access control, 
@@ -40,12 +40,12 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth/signup">
-                <Button size="lg" className="text-lg px-8 py-3">
+                <Button size="lg" className="text-lg px-8 py-3 border border-[var(--border-soft-black)] border-t-0 border-l-0 shadow-[var(--shadow-soft-black)]">
                   Start Shopping
                 </Button>
               </Link>
               <Link href="/auth/login">
-                <Button size="lg" className="text-lg px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white">
+                <Button size="lg" className="text-lg px-8 py-3 bg-[var(--color-primary-pink)] hover:bg-[var(--color-primary-pink-dark)] text-white">
                   Access Account
                 </Button>
               </Link>
