@@ -103,7 +103,7 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="bg-[var(--color-primary-pink)] mx-auto h-12 w-12 rounded-lg flex items-center justify-center">
             <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
@@ -327,7 +327,7 @@ export default function SignupPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4"
+              className="w-full flex justify-center py-2 px-4 pink-button"
             >
               {isLoading ? (
                 <>
@@ -345,7 +345,7 @@ export default function SignupPage() {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-link"
               >
                 Sign in here
               </Link>

@@ -18,10 +18,10 @@ export default function HomePage() {
             </div>
             <div className="flex space-x-4">
               <Link href="/auth/login">
-                <Button className="bg-[var(--color-primary-pink)] hover:bg-[var(--color-primary-pink-dark)] text-white">Sign In</Button>
+                <Button className="pink-button">Sign In</Button>
               </Link>
               <Link href="/auth/signup">
-                <Button className="border border-[var(--border-soft-black)] border-t-0 border-l-0 shadow-[var(--shadow-soft-black)]">Get Started</Button>
+                <Button className="hover-soft-border">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -40,12 +40,12 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth/signup">
-                <Button size="lg" className="text-lg px-8 py-3 border border-[var(--border-soft-black)] border-t-0 border-l-0 shadow-[var(--shadow-soft-black)]">
+                <Button size="lg" className="text-lg px-8 py-3 hover-soft-border">
                   Start Shopping
                 </Button>
               </Link>
               <Link href="/auth/login">
-                <Button size="lg" className="text-lg px-8 py-3 bg-[var(--color-primary-pink)] hover:bg-[var(--color-primary-pink-dark)] text-white">
+                <Button size="lg" className="text-lg px-8 py-3 pink-button">
                   Access Account
                 </Button>
               </Link>
