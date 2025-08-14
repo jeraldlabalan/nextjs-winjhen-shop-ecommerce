@@ -86,8 +86,8 @@ export default function LoginPage() {
           )}
           
           <div className="space-y-4">
-            <div>
-              <Label htmlFor="email" className="text-gray-700">
+            <div className="relative">
+              <Label htmlFor="email" className="text-gray-700 absolute left-0 top-1/2 -translate-y-1/2">
                 Email address
               </Label>
               <Input
@@ -98,8 +98,8 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
-                placeholder="Enter your email"
+                className="appearance-none shadow-none border-t-0 border-l-0 border-r-0 border-b border-black bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none"
+                placeholder=""
               />
             </div>
             

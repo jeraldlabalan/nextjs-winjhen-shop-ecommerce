@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
-:root {
-  --background: #FFF8F6;
-  --foreground: #0A0F1F;
+@layer theme, base, components, utilities;
 
-  /* Your custom color palette */
-  --color-primary-pink-light: #F06292;
-  --color-primary-pink: #E91E63;
-  --color-primary-pink-dark: #AD1457;
-  --color-soft-pink: #F8BBD0;
-  --color-rich-brown: #5D4037;
-  --color-warm-beige: #D7CCC8;
-  --color-off-white: #FFF8F6;
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
 }
 
-@layer components {
+@property --tw-ring-offset-shadow {
+  syntax: "<shadow>";
+  inherits: false;
+  initial-value: none;
+}
+
+@property --tw-ring-shadow {
+  syntax: "<shadow>";
+  inherits: false;
+  initial-value: none;
+}
+
+@layer theme {
+  :root {
+    --background: #fff8f6;
+    --foreground: #0a0f1f;
+
+    /* Your custom color palette */
+    --color-primary-pink-light: #f06292;
+    --color-primary-pink: #e91e63;
+    --color-primary-pink-dark: #ad1457;
+    --color-soft-pink: #f8bbd0;
+    --color-rich-brown: #5d4037;
+    --color-warm-beige: #d7ccc8;
+    --color-off-white: #fff8f6;
+  }
+}
+
+@layer utilities {
   .pink-button {
-    @apply bg-[var(--color-primary-pink)] text-[var(--color-off-white)];
+    background-color: var(--color-primary-pink);
+    color: var(--color-off-white);
   }
 
   .pink-button:hover {
-    @apply bg-[var(--color-primary-pink-light)]
+    background-color: var(--color-primary-pink-light);
   }
 
   .hover-soft-border {
@@ -38,15 +61,23 @@
   }
 
   .text-link {
-    @apply text-[var(--color-primary-pink)] hover:underline underline-offset-2 decoration-current
+    color: var(--color-primary-pink);
   }
 
-  .input-clicked {
-    
+  .text-link:hover {
+    text-decoration: underline;
   }
-  
 }
 
 button {
   cursor: pointer;
+}
+
+button,
+input {
+  --tw-ring-offset-width: 0px !important;
+  --tw-ring-offset-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
