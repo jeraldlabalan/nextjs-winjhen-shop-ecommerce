@@ -183,27 +183,7 @@ export default function LoadingDemoPage() {
           </div>
         </div>
 
-        {/* Color Options */}
-        <div className="mt-12 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4 text-center">
-            Progress Bar Colors
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {["blue", "green", "purple", "orange"].map((color) => (
-              <Button
-                key={color}
-                onClick={() => {
-                  startLoading()
-                  setTimeout(() => stopLoading(), 2000)
-                }}
-                className="w-full capitalize"
-                variant="outline"
-              >
-                {color} Progress
-              </Button>
-            ))}
-          </div>
-        </div>
+
 
         <div className="mt-8 text-center">
           <Button 

@@ -327,6 +327,7 @@ export default function SignupPage() {
             <Button
               type="submit"
               disabled={isLoading}
+              variant="auth"
               className="w-full flex justify-center py-2 px-4 pink-button"
             >
               {isLoading ? (

@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, Shield, UserPlus, ShoppingBag, Users, BarChart3 } from "lucide-react";
 import Link from "next/link";
@@ -9,6 +10,12 @@ import Link from "next/link";
 export default function AdminDashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated" || (session?.user?.role && session.user.role !== "ADMIN")) {
+      router.push("/auth/login");
+    }
+  }, [status, session?.user?.role, router]);
 
   if (status === "loading") {
     return (
@@ -19,8 +26,11 @@ export default function AdminDashboardPage() {
   }
 
   if (status === "unauthenticated" || session?.user?.role !== "ADMIN") {
-    router.push("/auth/login");
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin h-8 w-8" />
+      </div>
+    );
   }
 
   return (

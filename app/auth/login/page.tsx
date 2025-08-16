@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,31 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { handleAuthWithLoading } = useAuthLoading();
+  const { status } = useSession();
+
+  // Reset form state when session changes (e.g., after logout)
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      setEmail("");
+      setPassword("");
+      setError("");
+      setIsSubmitting(false);
+    }
+  }, [status]);
+
+  // Check if form is valid (both fields have content)
+  const isFormValid = email.trim() !== "" && password.trim() !== "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double submission
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
     setError("");
 
     await handleAuthWithLoading(
@@ -63,7 +83,9 @@ export default function LoginPage() {
           setError("An error occurred. Please try again.");
         }
       }
-    );
+    ).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -84,6 +106,7 @@ export default function LoginPage() {
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
               {error}
@@ -91,8 +114,9 @@ export default function LoginPage() {
           )}
           
           <div className="space-y-4">
-            <div className="relative">
-              <Label htmlFor="email" className="text-gray-700 absolute left-0 top-1/2 -translate-y-1/2">
+
+            <div>
+              <Label htmlFor="email" className="text-gray-700">
                 Email address
               </Label>
               <Input
@@ -103,8 +127,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none shadow-none border-t-0 border-l-0 border-r-0 border-b border-black bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none"
-                placeholder=""
+                placeholder="Enter your email"
               />
             </div>
             
@@ -112,8 +135,7 @@ export default function LoginPage() {
               <Label htmlFor="password" className="text-gray-700">
                 Password
               </Label>
-              <div className="relative mt-1">
-                <Input
+              <Input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -122,8 +144,9 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="pr-10"
+                  className=""
                 />
+              {/* <div className="relative mt-1">
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
@@ -135,8 +158,9 @@ export default function LoginPage() {
                     <Eye className="h-5 w-5 text-[var(--color-primary-pink)]" />
                   )}
                 </button>
-              </div>
+              </div> */}
             </div>
+            
           </div>
 
           <div className="flex items-center justify-between">
@@ -154,9 +178,10 @@ export default function LoginPage() {
             <Button
               type="submit"
               variant="auth"
+              disabled={!isFormValid || isSubmitting}
               className="w-full flex justify-center py-2 px-4"
             >
-              Sign in
+              {isSubmitting ? "Signing in..." : "Sign in"}
             </Button>
           </div>
 

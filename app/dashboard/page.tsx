@@ -2,12 +2,19 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, User, Shield, ShoppingBag, Users } from "lucide-react";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+    }
+  }, [status, router]);
 
   if (status === "loading") {
     return (
@@ -18,8 +25,11 @@ export default function DashboardPage() {
   }
 
   if (status === "unauthenticated") {
-    router.push("/auth/login");
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin h-8 w-8" />
+      </div>
+    );
   }
 
   const getRoleDisplay = (role: string) => {
