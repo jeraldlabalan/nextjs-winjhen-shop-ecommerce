@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
           </p>
           <div className="space-y-3">
             <Link href="/auth/login">
-              <Button variant="outline" className="w-full">
+              <Button className="w-full">
                 Back to Login
               </Button>
             </Link>
@@ -117,6 +117,7 @@ export default function ForgotPasswordPage() {
               type="submit"
               disabled={isLoading}
               className="w-full flex justify-center py-2 px-4"
+              variant="auth"
             >
               {isLoading ? (
                 <>
@@ -132,7 +133,7 @@ export default function ForgotPasswordPage() {
           <div className="text-center">
             <Link
               href="/auth/login"
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-500"
+              className="inline-flex items-center text-sm text-[var(--color-primary-pink-light)] hover:text-[var(--color-primary-pink)]"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to login

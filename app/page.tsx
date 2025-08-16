@@ -7,7 +7,7 @@ export default function HomePage() {
   const { navigateWithLoading } = useNavigationLoading();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <header className="py-6">

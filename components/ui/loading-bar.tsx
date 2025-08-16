@@ -6,11 +6,10 @@ import { cn } from "@/lib/utils"
 interface LoadingBarProps {
   isLoading?: boolean
   className?: string
-  color?: "blue" | "green" | "purple" | "orange"
 }
 
 const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>(
-  ({ isLoading = false, className, color = "blue" }, ref) => {
+  ({ isLoading = false, className }, ref) => {
     const [progress, setProgress] = React.useState(0)
     const [isVisible, setIsVisible] = React.useState(false)
 
@@ -43,12 +42,7 @@ const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>(
       }
     }, [isLoading])
 
-    const colorClasses = {
-      blue: "bg-blue-500",
-      green: "bg-green-500", 
-      purple: "bg-purple-500",
-      orange: "bg-orange-500"
-    }
+
 
     if (!isVisible) return null
 
@@ -63,7 +57,7 @@ const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>(
         <div
           className={cn(
             "h-full transition-all duration-300 ease-out",
-            colorClasses[color]
+            "bg-[var(--color-primary-pink)]"
           )}
           style={{
             width: `${progress}%`,

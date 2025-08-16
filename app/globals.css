@@ -21,7 +21,7 @@
 }
 :root {
 
-  --background: #fff8f6;
+  --background: #ffffff;
   --foreground: #0a0f1f;
   --color-primary-pink: oklch(70% 0.25 340);  
   --color-primary-pink-dark: oklch(55% 0.25 340);  
@@ -56,32 +56,7 @@
   initial-value: none;
 }
 
-@layer theme {
-  :root {
-    --background: #fff8f6;
-    --foreground: #0a0f1f;
-
-    /* Your custom color palette */
-    --color-primary-pink-light: #f06292;
-    --color-primary-pink: #e91e63;
-    --color-primary-pink-dark: #ad1457;
-    --color-soft-pink: #f8bbd0;
-    --color-rich-brown: #5d4037;
-    --color-warm-beige: #d7ccc8;
-    --color-off-white: #fff8f6;
-  }
-}
-
 @layer utilities {
-  .pink-button {
-    background-color: var(--color-primary-pink);
-    color: var(--color-off-white);
-  }
-
-  .pink-button:hover {
-    background-color: var(--color-primary-pink-light);
-  }
-
   .hover-soft-border {
     box-shadow: none;
     border: 1px solid transparent;

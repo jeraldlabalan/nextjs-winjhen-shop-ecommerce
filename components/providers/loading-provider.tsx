@@ -8,7 +8,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <LoadingBar isLoading={isLoading} color="blue" />
+      <LoadingBar isLoading={isLoading} />
       {children}
     </>
   )
