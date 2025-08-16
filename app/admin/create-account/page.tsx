@@ -101,7 +101,7 @@ export default function CreateAccountPage() {
           setSuccess(false);
         }, 3000);
       }
-    } catch (_err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

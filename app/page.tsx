@@ -1,135 +1,274 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
-import { useNavigationLoading } from "@/lib/use-navigation-loading";
+import { useSession } from "next-auth/react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function HomePage() {
-  const { navigateWithLoading } = useNavigationLoading();
+  const { data: session } = useSession()
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <header className="py-6">
-          <div className="flex justify-between items-center">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header for landing page */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo and Brand */}
             <div className="flex items-center">
-              <div className="h-10 w-10 bg-[var(--color-primary-pink)] rounded-lg flex items-center justify-center mr-3">
-                <svg className="h-6 w-6 bg-[var(--color-primary-pink)] text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
+              <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-lg">W</span>
               </div>
-              <h1 className=" text-2xl font-bold text-gray-900">Winjhen Shop</h1>
+              <span className="text-xl font-bold text-gray-900">Winjhen Shop</span>
             </div>
-            <div className="flex space-x-4">
-              <Button 
-                className="pink-button" 
-                onClick={() => navigateWithLoading("/auth/login")}
-              >
-                Sign In
-              </Button>
-              <Button 
-                className="hover-soft-border" 
-                onClick={() => navigateWithLoading("/auth/signup")}
-              >
-                Get Started
-              </Button>
+
+            {/* Navigation */}
+            <div className="flex items-center space-x-4">
+              {session ? (
+                <Link href="/dashboard">
+                  <Button size="sm">Go to Dashboard</Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <Button size="sm">Sign In</Button>
+                  </Link>
+                  <Link href="/auth/signup">
+                    <Button variant="outline" size="sm">Create Account</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* Hero Section */}
-        <main className="py-20 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Professional E-commerce
-              <span className="text-[var(--color-primary-pink)]"> Platform</span>
-            </h2>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              A comprehensive solution for retail and wholesale business with role-based access control, 
-              inventory management, and flexible payment options for resellers.
+      {/* Hero Section */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
+              Welcome to{" "}
+              <span className="text-blue-600">Winjhen Shop</span>
+            </h1>
+            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
+              Professional e-commerce platform for retail and wholesale business. 
+              Quality products, competitive prices, and exceptional service.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-3 hover-soft-border"
-                onClick={() => navigateWithLoading("/auth/signup")}
-              >
-                Start Shopping
-              </Button>
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-3 pink-button"
-                onClick={() => navigateWithLoading("/auth/login")}
-              >
-                Access Account
-              </Button>
+            <div className="mt-10 flex justify-center gap-4">
+              {session ? (
+                <Link href="/dashboard">
+                  <Button size="lg">Go to Dashboard</Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <Button size="lg">Sign In</Button>
+                  </Link>
+                  <Link href="/auth/signup">
+                    <Button variant="outline" size="lg">Create Account</Button>
+                  </Link>
+                </>
+              )}
             </div>
-            
-            {/* Demo Button */}
-            <div className="mt-8">
-              <Button 
-                variant="outline"
-                size="lg"
-                onClick={() => navigateWithLoading("/loading-demo")}
-                className="text-lg px-8 py-3"
-              >
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              Why Choose Winjhen Shop?
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Comprehensive e-commerce solutions for all types of users
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Card>
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl">🛍️</span>
+                </div>
+                <CardTitle>Retail Customers</CardTitle>
+                <CardDescription>
+                  Shop with confidence with our wide selection of quality products
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Secure online shopping</li>
+                  <li>• Fast delivery options</li>
+                  <li>• Easy returns & exchanges</li>
+                  <li>• Loyalty rewards program</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl">🏢</span>
+                </div>
+                <CardTitle>Reseller Customers</CardTitle>
+                <CardDescription>
+                  Bulk purchasing with special wholesale pricing and credit terms
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Wholesale pricing</li>
+                  <li>• Credit payment terms</li>
+                  <li>• Bulk order discounts</li>
+                  <li>• Business analytics</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl">👨‍💼</span>
+                </div>
+                <CardTitle>Employees</CardTitle>
+                <CardDescription>
+                  Manage products, inventory, and customer orders efficiently
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• Product management</li>
+                  <li>• Order processing</li>
+                  <li>• Inventory tracking</li>
+                  <li>• Customer support</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-red-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl">⚡</span>
+                </div>
+                <CardTitle>Administrators</CardTitle>
+                <CardDescription>
+                  Full platform control with comprehensive management tools
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="text-sm text-gray-600 space-y-2">
+                  <li>• User management</li>
+                  <li>• System configuration</li>
+                  <li>• Performance analytics</li>
+                  <li>• Security controls</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Loading Demo Section */}
+      <div className="py-16 bg-gradient-to-r from-orange-50 to-yellow-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              🚀 Try Our Loading Features
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Experience the smooth loading states and progress indicators
+            </p>
+          </div>
+          <div className="text-center">
+            <Link href="/loading-demo">
+              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white">
                 🚀 Try Loading Demo
               </Button>
-            </div>
+            </Link>
           </div>
-        </main>
-
-        {/* Features Section */}
-        <section className="py-20">
-            <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
-              Platform Features
-            </h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-6">
-                <div className="h-16 w-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">Role-Based Access</h4>
-                <p className="text-gray-600">
-                  Secure access control for admins, employees, retail customers, and resellers.
-                </p>
-              </div>
-              
-              <div className="text-center p-6">
-                <div className="h-16 w-16 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">Inventory Management</h4>
-                <p className="text-gray-600">
-                  Comprehensive product management with stock tracking and pricing controls.
-                </p>
-              </div>
-              
-              <div className="text-center p-6">
-                <div className="h-16 w-16 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">Flexible Payments</h4>
-                <p className="text-gray-600">
-                  Support for immediate payments and deferred payment options for resellers.
-                </p>
-              </div>
-            </div>
-          </section>
-
-        {/* Footer */}
-        <footer className="py-8 border-t border-gray-200">
-          <div className="text-center text-gray-600">
-            <p>&copy; 2024 Winjhen Shop. All rights reserved.</p>
-          </div>
-        </footer>
+        </div>
       </div>
+
+      {/* CTA Section */}
+      <div className="bg-blue-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">
+              Ready to Get Started?
+            </h2>
+            <p className="mt-4 text-xl text-blue-100">
+              Join thousands of satisfied customers and businesses
+            </p>
+            <div className="mt-8 flex justify-center gap-4">
+              {session ? (
+                <Link href="/dashboard">
+                  <Button size="lg" variant="secondary">Go to Dashboard</Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/signup">
+                    <Button size="lg" variant="secondary">Create Account</Button>
+                  </Link>
+                  <Link href="/auth/login">
+                    <Button size="lg" variant="outline" className="text-blue-600 bg-white hover:bg-gray-50">
+                      Sign In
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-white text-lg font-semibold mb-4">Winjhen Shop</h3>
+              <p className="text-gray-400 text-sm">
+                Professional e-commerce platform for retail and wholesale business.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-white text-sm font-semibold mb-4">For Customers</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>Shop Products</li>
+                <li>Track Orders</li>
+                <li>Returns & Exchanges</li>
+                <li>Customer Support</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-sm font-semibold mb-4">For Businesses</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>Wholesale Pricing</li>
+                <li>Bulk Orders</li>
+                <li>Credit Terms</li>
+                <li>Business Analytics</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-sm font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>About Us</li>
+                <li>Contact</li>
+                <li>Privacy Policy</li>
+                <li>Terms of Service</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
+            <p className="text-gray-400 text-sm">
+              © 2024 Winjhen Shop. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }

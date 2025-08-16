@@ -7,13 +7,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react";
+
 import { useAuthLoading } from "@/lib/use-auth-loading";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -69,8 +69,10 @@ export default function LoginPage() {
               router.push("/employee/dashboard");
               break;
             case "RETAIL_CUSTOMER":
-            case "RESELLER_CUSTOMER":
               router.push("/dashboard");
+              break;
+            case "RESELLER_CUSTOMER":
+              router.push("/reseller/catalog");
               break;
             default:
               router.push("/dashboard");
@@ -138,7 +140,7 @@ export default function LoginPage() {
               <Input
                   id="password"
                   name="password"
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   autoComplete="current-password"
                   required
                   value={password}
