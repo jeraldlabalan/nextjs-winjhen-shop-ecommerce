@@ -6,10 +6,10 @@ import { useCallback } from "react"
 export function useAuthLoading() {
   const { startLoading, stopLoading } = useLoading()
 
-  const handleAuthWithLoading = useCallback(async (
-    authFunction: () => Promise<any>,
+  const handleAuthWithLoading = useCallback(async <T>(
+    authFunction: () => Promise<T>,
     onSuccess?: () => void,
-    onError?: (error: any) => void
+    onError?: (error: Error) => void
   ) => {
     startLoading()
     
@@ -18,7 +18,7 @@ export function useAuthLoading() {
       if (onSuccess) onSuccess()
       return result
     } catch (error) {
-      if (onError) onError(error)
+      if (onError) onError(error instanceof Error ? error : new Error(String(error)))
       throw error
     } finally {
       stopLoading()
