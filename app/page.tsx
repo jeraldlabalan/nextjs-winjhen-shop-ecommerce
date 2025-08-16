@@ -1,274 +1,250 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Search, User, ShoppingCart, ChevronDown, Star } from "lucide-react"
+import { useState } from "react"
 
 export default function HomePage() {
   const { data: session } = useSession()
+  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStartX, setDragStartX] = useState(0)
+  const [dragStartCategory, setDragStartCategory] = useState("all")
+  const [containerRect, setContainerRect] = useState<DOMRect | null>(null)
+
+  const categories = [
+    { id: "all", name: "All Products" },
+    { id: "hair", name: "Hair" },
+    { id: "skincare", name: "Skin Care" },
+    { id: "makeup", name: "Makeup" },
+    { id: "body", name: "Body" },
+    { id: "fragrance", name: "Fragrance" },
+    { id: "bath", name: "Bath" },
+    { id: "home", name: "Home" },
+  ]
+
+  const handleMouseDown = (e: React.MouseEvent, categoryId: string) => {
+    setIsDragging(true)
+    setDragStartX(e.clientX)
+    setDragStartCategory(categoryId)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return
+    
+    const container = e.currentTarget.closest('.category-container')
+    if (!container) return
+    
+    const rect = container.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const containerWidth = rect.width
+    const categoryWidth = containerWidth / categories.length
+    
+    const categoryIndex = Math.floor(x / categoryWidth)
+    const clampedIndex = Math.max(0, Math.min(categoryIndex, categories.length - 1))
+    
+    // Only update visual position while dragging, don't trigger backend logic yet
+    setSelectedCategory(categories[clampedIndex].id)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+    // Here you can add backend logic to fetch products for the selected category
+    console.log('Category selected:', selectedCategory)
+    // Example: fetchProductsByCategory(selectedCategory)
+  }
+
+  const handleMouseLeave = () => {
+    setIsDragging(false)
+    // Snap to nearest category when leaving container
+    const currentIndex = categories.findIndex(cat => cat.id === selectedCategory)
+    if (currentIndex !== -1) {
+      setSelectedCategory(categories[currentIndex].id)
+    }
+  }
+
+  const handleCategoryClick = (categoryId: string) => {
+    // Direct click - immediately select and trigger backend logic
+    setSelectedCategory(categoryId)
+    console.log('Category clicked:', categoryId)
+    // Example: fetchProductsByCategory(categoryId)
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header for landing page */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-white">
+      
+
+      {/* Header / Navigation */}
+      <header className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo and Brand */}
+          <div className="flex justify-between items-center h-20">
+            {/* Logo */}
             <div className="flex items-center">
-              <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-lg">W</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">Winjhen Shop</span>
+              <span className="text-2xl font-bold text-gray-900">
+                <i>winjhen<span className="text-[var(--color-primary-pink)]">.</span></i>
+              </span>
             </div>
 
-            {/* Navigation */}
-            <div className="flex items-center space-x-4">
-              {session ? (
-                <Link href="/dashboard">
-                  <Button size="sm">Go to Dashboard</Button>
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/login">
-                    <Button size="sm">Sign In</Button>
-                  </Link>
-                  <Link href="/auth/signup">
-                    <Button variant="outline" size="sm">Create Account</Button>
-                  </Link>
-                </>
-              )}
+            {/* Navigation Links */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              <div className="relative group">
+                <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900">
+                  <span>Shop</span>
+                  <Badge className="ml-1 bg-[var(--color-primary-pink-dark)] text-white text-xs">50% OFF</Badge>
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </div>
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900">
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span>Best Sellers</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900">
+                <span>Collections</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-gray-900">
+                <span>Presets</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            </nav>
+
+            {/* Right Side Icons */}
+            <div className="flex items-center space-x-6">
+              <button className="text-gray-700 hover:text-gray-900">
+                <Search className="h-5 w-5" />
+              </button>
+              <button className="text-gray-700 hover:text-gray-900">
+                <User className="h-5 w-5" />
+              </button>
+              <button className="text-gray-700 hover:text-gray-900 relative">
+                <ShoppingCart className="h-5 w-5" />
+                <span className="absolute -top-2 -right-2 bg-[var(--color-rich-brown)] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  1
+                </span>
+              </button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
-              Welcome to{" "}
-              <span className="text-blue-600">Winjhen Shop</span>
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
-              Professional e-commerce platform for retail and wholesale business. 
-              Quality products, competitive prices, and exceptional service.
-            </p>
-            <div className="mt-10 flex justify-center gap-4">
-              {session ? (
-                <Link href="/dashboard">
-                  <Button size="lg">Go to Dashboard</Button>
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/login">
-                    <Button size="lg">Sign In</Button>
-                  </Link>
-                  <Link href="/auth/signup">
-                    <Button variant="outline" size="lg">Create Account</Button>
-                  </Link>
-                </>
-              )}
+      <section className="bg-[var(--color-warm-beige)] py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-1 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-[var(--color-rich-brown)] uppercase tracking-wide">
+                  PREMIUM COLLECTION
+                </p>
+                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                  Quality products
+                  <br />
+                  <span className="text-[var(--color-rich-brown)]">every day.</span>
+                </h1>
+
+              </div>
+              {/* Buttons removed - ready for custom image/video content */}
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Features Section */}
-      <div className="py-24 bg-gray-50">
+      {/* Best Sellers Section */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              Why Choose Winjhen Shop?
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
+              <span className="text-2xl lg:text-3xl font-normal">Our</span>{" "}
+              <span className="italic">best sellers.</span>
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Comprehensive e-commerce solutions for all types of users
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card>
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">🛍️</span>
-                </div>
-                <CardTitle>Retail Customers</CardTitle>
-                <CardDescription>
-                  Shop with confidence with our wide selection of quality products
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Secure online shopping</li>
-                  <li>• Fast delivery options</li>
-                  <li>• Easy returns & exchanges</li>
-                  <li>• Loyalty rewards program</li>
-                </ul>
-              </CardContent>
-            </Card>
+          {/* Category Filters */}
+          <div className="mb-12">
+            {/* Desktop: Horizontal with slider */}
+            <div className="hidden lg:flex justify-center">
+              <div 
+                className="flex space-x-2 bg-gray-100 p-1 rounded-full relative category-container cursor-grab active:cursor-grabbing"
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* Animated Background Slider */}
+                <div 
+                  className="absolute top-1 bottom-1 bg-gray-900 rounded-full transition-all duration-300 ease-out shadow-lg"
+                  style={{
+                    left: `${categories.findIndex(cat => cat.id === selectedCategory) * (100 / categories.length)}%`,
+                    width: `${100 / categories.length}%`
+                  }}
+                />
+                
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                    onMouseDown={(e) => handleMouseDown(e, category.id)}
+                    className={`relative z-10 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ease-out min-w-[140px] text-center transform select-none ${
+                      selectedCategory === category.id
+                        ? "text-white scale-110"
+                        : "text-gray-700 hover:text-gray-900 scale-100"
+                    }`}
+                    style={{
+                      transform: selectedCategory === category.id ? 'scale(1.15)' : 'scale(1)',
+                      transformOrigin: 'center'
+                    }}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            <Card>
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">🏢</span>
-                </div>
-                <CardTitle>Reseller Customers</CardTitle>
-                <CardDescription>
-                  Bulk purchasing with special wholesale pricing and credit terms
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Wholesale pricing</li>
-                  <li>• Credit payment terms</li>
-                  <li>• Bulk order discounts</li>
-                  <li>• Business analytics</li>
-                </ul>
-              </CardContent>
-            </Card>
+            {/* Mobile & Tablet: Vertical stacked */}
+            <div className="lg:hidden">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-md mx-auto">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ease-out text-center transform ${
+                      selectedCategory === category.id
+                        ? "bg-gray-900 text-white shadow-lg"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                    style={{
+                      transform: selectedCategory === category.id ? 'scale(1.15)' : 'scale(1)',
+                      transformOrigin: 'center'
+                    }}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
 
-            <Card>
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">👨‍💼</span>
+          {/* Product Grid Placeholder */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="bg-gray-50 rounded-2xl p-8 h-80 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                  <div className="w-20 h-20 bg-gray-200 rounded-full mx-auto"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-32 mx-auto"></div>
+                    <div className="h-3 bg-gray-200 rounded w-24 mx-auto"></div>
+                  </div>
                 </div>
-                <CardTitle>Employees</CardTitle>
-                <CardDescription>
-                  Manage products, inventory, and customer orders efficiently
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Product management</li>
-                  <li>• Order processing</li>
-                  <li>• Inventory tracking</li>
-                  <li>• Customer support</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 bg-red-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">⚡</span>
-                </div>
-                <CardTitle>Administrators</CardTitle>
-                <CardDescription>
-                  Full platform control with comprehensive management tools
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• User management</li>
-                  <li>• System configuration</li>
-                  <li>• Performance analytics</li>
-                  <li>• Security controls</li>
-                </ul>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Loading Demo Section */}
-      <div className="py-16 bg-gradient-to-r from-orange-50 to-yellow-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              🚀 Try Our Loading Features
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Experience the smooth loading states and progress indicators
-            </p>
-          </div>
-          <div className="text-center">
-            <Link href="/loading-demo">
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white">
-                🚀 Try Loading Demo
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className="bg-blue-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Ready to Get Started?
-            </h2>
-            <p className="mt-4 text-xl text-blue-100">
-              Join thousands of satisfied customers and businesses
-            </p>
-            <div className="mt-8 flex justify-center gap-4">
-              {session ? (
-                <Link href="/dashboard">
-                  <Button size="lg" variant="secondary">Go to Dashboard</Button>
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/signup">
-                    <Button size="lg" variant="secondary">Create Account</Button>
-                  </Link>
-                  <Link href="/auth/login">
-                    <Button size="lg" variant="outline" className="text-blue-600 bg-white hover:bg-gray-50">
-                      Sign In
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">Winjhen Shop</h3>
-              <p className="text-gray-400 text-sm">
-                Professional e-commerce platform for retail and wholesale business.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white text-sm font-semibold mb-4">For Customers</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Shop Products</li>
-                <li>Track Orders</li>
-                <li>Returns & Exchanges</li>
-                <li>Customer Support</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white text-sm font-semibold mb-4">For Businesses</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Wholesale Pricing</li>
-                <li>Bulk Orders</li>
-                <li>Credit Terms</li>
-                <li>Business Analytics</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white text-sm font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>About Us</li>
-                <li>Contact</li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 Winjhen Shop. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   )
 }
