@@ -7,31 +7,34 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import { useAuthLoading } from "@/lib/use-auth-loading";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { handleAuthWithLoading } = useAuthLoading();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
 
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
+    await handleAuthWithLoading(
+      async () => {
+        const result = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
 
-      if (result?.error) {
-        setError("Invalid email or password");
-      } else {
+        if (result?.error) {
+          setError("Invalid email or password");
+          throw new Error("Invalid credentials");
+        }
+
         // Get session to check user role
         const session = await getSession();
         if (session?.user) {
@@ -53,12 +56,14 @@ export default function LoginPage() {
               router.push("/dashboard");
           }
         }
+      },
+      undefined,
+      (error) => {
+        if (error.message !== "Invalid credentials") {
+          setError("An error occurred. Please try again.");
+        }
       }
-    } catch (_err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    );
   };
 
   return (
@@ -67,7 +72,7 @@ export default function LoginPage() {
         <div>
           <div className="mx-auto h-12 w-12 bg-[var(--color-primary-pink)] rounded-lg flex items-center justify-center">
             <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -148,17 +153,10 @@ export default function LoginPage() {
           <div>
             <Button
               type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 pink-button"
+              variant="auth"
+              className="w-full flex justify-center py-2 px-4"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
-                  Signing in...
-                </>
-              ) : (
-                "Sign in"
-              )}
+              Sign in
             </Button>
           </div>
 

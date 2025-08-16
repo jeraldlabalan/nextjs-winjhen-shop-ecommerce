@@ -19,24 +19,38 @@
   inherits: false;
   initial-value: none;
 }
+:root {
+
+  --background: #fff8f6;
+  --foreground: #0a0f1f;
+  --color-primary-pink: oklch(70% 0.25 340);  
+  --color-primary-pink-dark: oklch(55% 0.25 340);  
+  --color-primary-pink-light: oklch(85% 0.15 340);
+  --color-soft-pink: oklch(83.53% 0.0701 343.83);
+  --color-rich-brown: oklch(36.34% 0.0617 40.07);
+  --color-warm-beige: oklch(81.78% 0.0264 56.97);
+  --color-off-white: oklch(98.45% 0.0066 39.43);
+  }
 
 @layer theme {
-  :root {
-    --background: #fff8f6;
-    --foreground: #0a0f1f;
 
-    /* Your custom color palette */
-    --color-primary-pink-light: #f06292;
-    --color-primary-pink: #e91e63;
-    --color-primary-pink-dark: #ad1457;
-    --color-soft-pink: #f8bbd0;
-    --color-rich-brown: #5d4037;
-    --color-warm-beige: #d7ccc8;
-    --color-off-white: #fff8f6;
+}
+
+@layer base {
+  button {
+    @apply cursor-pointer
+  }
+
+  input {
+    --tw-ring-offset-width: 0px !important;
+    --tw-ring-offset-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 }
 
-@layer utilities {
+@layer components {
   .pink-button {
     background-color: var(--color-primary-pink);
     color: var(--color-off-white);
@@ -69,15 +83,32 @@
   }
 }
 
-button {
-  cursor: pointer;
-}
+/* 
 
-button,
-input {
-  --tw-ring-offset-width: 0px !important;
-  --tw-ring-offset-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
+FLUID TEXT
+  text-[min(10vw, 70px)]
+
+ACCENT
+  accent-pink-500
+
+HIGHTLIGHT
+  selection:bg-pink selection:text-white
+
+LESS JAVASCRIPT
+  <div>
+    <details className="open:bg-white open:ring-1" open>
+    <summary className="leading-6">
+      Why do they call it Ovaltine?
+    </summary>
+    <div>
+      <p>
+        Some text
+      </p>
+    <div>
+    </details>
+  </div>
+
+  CARET
+  <select className="caret-pink-500"></select>
+*/
+

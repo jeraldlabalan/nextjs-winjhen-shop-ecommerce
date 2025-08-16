@@ -1,7 +1,11 @@
-import Link from "next/link";
+"use client"
+
 import { Button } from "@/components/ui/button";
+import { useNavigationLoading } from "@/lib/use-navigation-loading";
 
 export default function HomePage() {
+  const { navigateWithLoading } = useNavigationLoading();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,12 +21,18 @@ export default function HomePage() {
               <h1 className=" text-2xl font-bold text-gray-900">Winjhen Shop</h1>
             </div>
             <div className="flex space-x-4">
-              <Link href="/auth/login">
-                <Button className="pink-button">Sign In</Button>
-              </Link>
-              <Link href="/auth/signup">
-                <Button className="hover-soft-border">Get Started</Button>
-              </Link>
+              <Button 
+                className="pink-button" 
+                onClick={() => navigateWithLoading("/auth/login")}
+              >
+                Sign In
+              </Button>
+              <Button 
+                className="hover-soft-border" 
+                onClick={() => navigateWithLoading("/auth/signup")}
+              >
+                Get Started
+              </Button>
             </div>
           </div>
         </header>
@@ -39,16 +49,32 @@ export default function HomePage() {
               inventory management, and flexible payment options for resellers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/signup">
-                <Button size="lg" className="text-lg px-8 py-3 hover-soft-border">
-                  Start Shopping
-                </Button>
-              </Link>
-              <Link href="/auth/login">
-                <Button size="lg" className="text-lg px-8 py-3 pink-button">
-                  Access Account
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-3 hover-soft-border"
+                onClick={() => navigateWithLoading("/auth/signup")}
+              >
+                Start Shopping
+              </Button>
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-3 pink-button"
+                onClick={() => navigateWithLoading("/auth/login")}
+              >
+                Access Account
+              </Button>
+            </div>
+            
+            {/* Demo Button */}
+            <div className="mt-8">
+              <Button 
+                variant="outline"
+                size="lg"
+                onClick={() => navigateWithLoading("/loading-demo")}
+                className="text-lg px-8 py-3"
+              >
+                🚀 Try Loading Demo
+              </Button>
             </div>
           </div>
         </main>
